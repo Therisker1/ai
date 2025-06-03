@@ -7,30 +7,39 @@ on:
 
 jobs:
   build:
-    name: Build Release APK
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Grant execute permission to Gradle
+      - name: Give Gradle permission
         run: chmod +x ./gradlew
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease --no-daemon
+      - name: Assemble Release
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
 
-      - name: List all APKs (debug step)
-        run: find . -type f -name "*.apk"
+      - name: Search for all APK files
+        id: find_apk
+        run: |
+          echo "Searching for APKs..."
+          find . -type f -name "*.apk"
+          APK_PATH=$(find . -type f -name "*.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "No APK found!"
+            exit 1
+          fi
+          echo "APK found at: $APK_PATH"
+          echo "apk-path=$APK_PATH" >> $GITHUB_OUTPUT
 
-      - name: Upload all APKs
+      - name: Upload found APK
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: release-apks
-          path: app/build/outputs/apk/**/*.apk
+          name: built-apk
+          path: ${{ steps.find_apk.outputs.apk-path }}
