@@ -1,37 +1,30 @@
-name: Build APK
+name: Build and Upload APK
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
   build:
-    name: Build APK on Ubuntu
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: 🛠️ Set up JDK
-        uses: actions/setup-java@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: '17'
 
-      - name: ⚙️ Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: 📦 Make Gradle executable
+      - name: Grant execute permission
         run: chmod +x ./gradlew
 
-      - name: 🧪 Run Gradle build
-        run: ./gradlew assembleDebug
+      - name: Build release APK
+        run: ./gradlew assembleRelease --no-daemon
 
-      - name: 📤 Upload APK
+      - name: Upload release APK
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: MagicAIUltra-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: app-release.apk
+          path: app/build/outputs/apk/release/app-release.apk
