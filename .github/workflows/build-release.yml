@@ -22,14 +22,14 @@ jobs:
       - name: Grant execute permission to Gradle
         run: chmod +x ./gradlew
 
-     - name: Build Release APK from :app module
-  run: ./gradlew :app:assembleRelease --no-daemon --stacktrace --info
+      - name: Build Release APK from :magicaiultra module
+        run: ./gradlew :magicaiultra:assembleRelease --no-daemon --stacktrace --info
 
       - name: Find APK
         id: find_apk
         run: |
           echo "Looking for APK..."
-          APK_PATH=$(find app/build/outputs -type f -name "*.apk" | head -n 1)
+          APK_PATH=$(find magicaiultra/build/outputs -type f -name "*.apk" | head -n 1)
           if [ -z "$APK_PATH" ]; then
             echo "No APK found!"
             exit 1
