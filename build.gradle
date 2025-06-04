@@ -17,11 +17,23 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("magicaiultra-release.jks")
+            storePassword "MagicUltra@2025"
+            keyAlias "magicaiultra_key"
+            keyPassword "MagicUltra@2025"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug // Or your release signingConfig here
+        }
+        debug {
+            // Optional: sign debug builds with the same config if needed
         }
     }
 
@@ -29,6 +41,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = '17'
     }
