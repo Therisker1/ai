@@ -19,18 +19,27 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Give Gradle permission
         run: chmod +x ./gradlew
 
       - name: Build Release APK
-  run: ./gradlew :magicaiultra:assembleRelease --stacktrace --info
-
+        run: ./gradlew :magicaiultra:assembleRelease --stacktrace --info
 
       - name: Show APK Output Directory
-        run: ls -R app/build/outputs/
+        run: ls -R magicaiultra/build/outputs/
 
       - name: Upload All APKs
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4
         with:
           name: release-apks
           path: magicaiultra/build/outputs/apk/**/*.apk
