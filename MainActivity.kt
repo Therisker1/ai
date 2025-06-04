@@ -1,4 +1,4 @@
-package com.ultra.magicai
+package com.adam.magicaiultra
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
