@@ -22,24 +22,14 @@ jobs:
       - name: Give Gradle permission
         run: chmod +x ./gradlew
 
-      - name: Assemble Release
-        run: ./gradlew assembleRelease --no-daemon --stacktrace
+      - name: Build Release APK
+        run: ./gradlew :app:assembleRelease --stacktrace --info
 
-      - name: Search for all APK files
-        id: find_apk
-        run: |
-          echo "Searching for APKs..."
-          find . -type f -name "*.apk"
-          APK_PATH=$(find . -type f -name "*.apk" | head -n 1)
-          if [ -z "$APK_PATH" ]; then
-            echo "No APK found!"
-            exit 1
-          fi
-          echo "APK found at: $APK_PATH"
-          echo "apk-path=$APK_PATH" >> $GITHUB_OUTPUT
+      - name: Show APK Output Directory
+        run: ls -R app/build/outputs/
 
-      - name: Upload found APK
+      - name: Upload All APKs
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: built-apk
-          path: ${{ steps.find_apk.outputs.apk-path }}
+          name: release-apks
+          path: app/build/outputs/apk/**/*.apk
