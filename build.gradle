@@ -1,8 +1,8 @@
-
 apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 33
+
     defaultConfig {
         applicationId "com.magicaiultra"
         minSdkVersion 24
@@ -11,15 +11,7 @@ android {
         versionName "0.1.0"
         multiDexEnabled true
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            debuggable true
-        }
-    }
+
     signingConfigs {
         debug {
             storeFile file("debug.keystore")
@@ -28,8 +20,16 @@ android {
             keyPassword "android"
         }
     }
+
     buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug // ⬅️ This ensures the release APK can be built
+        }
         debug {
+            debuggable true
             signingConfig signingConfigs.debug
         }
     }
@@ -51,7 +51,6 @@ dependencies {
     // Voice and speech
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
     implementation 'androidx.activity:activity-ktx:1.8.1'
-    implementation 'android.speech.tts.TextToSpeech'
 
     // Overlay and permissions
     implementation 'com.github.fondesa:recycler-view-divider:3.5.0'
