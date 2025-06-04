@@ -22,8 +22,8 @@ jobs:
       - name: Grant execute permission to Gradle
         run: chmod +x ./gradlew
 
-      - name: Build Release APK from :app module
-        run: ./gradlew :app:assembleRelease --no-daemon
+     - name: Build Release APK from :app module
+  run: ./gradlew :app:assembleRelease --no-daemon --stacktrace --info
 
       - name: Find APK
         id: find_apk
